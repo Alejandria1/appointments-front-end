@@ -1,9 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import NavBar from './Components/navbar';
+import DashboardTabs from './Components/dashboardTab';
 
 function App() {
   return (
+    
     <div className="App">
+      <NavBar />
+      <DashboardTabs />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -20,6 +26,7 @@ function App() {
       </header>
     </div>
   );
+
 }
 
 export default App;
