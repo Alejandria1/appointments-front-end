@@ -1,5 +1,6 @@
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import DayAppointments from './DayAppointments';
 
 function DashboardTabs() {
   return (
@@ -12,6 +13,7 @@ function DashboardTabs() {
     >
       <Tab eventKey="todays" title="Todays Appointments">
         Todays Appointments
+        <DayAppointments/>
       </Tab>
       <Tab eventKey="pastAptms" title="Past Appointments">
         Past Appointments
