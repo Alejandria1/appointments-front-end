@@ -3,14 +3,24 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import '../styles/Appointments.css';
+function getDate() {
+    const today = new Date();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    const date = today.getDate();
+    return `${year}-${month}-${date}`;
+  }
 
+  
 function DayAppointments() {
     const [slots, setSlots] = useState([]);
     
     const [employees, setEmployees] = useState([]);
 
+    const today = getDate();
+
     useEffect(() => {
-        axios.get('https://localhost:7002/Appointment?appointmentDate=2024-05-28')
+        axios.get('https://localhost:7002/Appointment?appointmentDate=' + today) 
           .then(response => {
             setSlots(response.data);
             console.log(response.data);
