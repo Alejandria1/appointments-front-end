@@ -5,9 +5,17 @@ import axios from 'axios';
 import '../styles/Appointments.css';
 function getDate() {
     const today = new Date();
-    const month = today.getMonth() + 1;
-    const year = today.getFullYear();
-    const date = today.getDate();
+    
+    var month = today.getMonth() + 1;
+    var year = today.getFullYear();
+    var date = today.getDate();
+
+    if(month < 10){
+      month = '0' + month;
+    }
+    if (date < 10) { 
+      date = '0' + date;
+  }
     return `${year}-${month}-${date}`;
   }
 
@@ -29,39 +37,70 @@ function DayAppointments() {
             console.error(error);
           });
           
-          console.log(slots);
-      }, []);
+    }, []);
 
-    // New function to filter slots (e.g., only new applications)
-    // const filterSlots = (slots) => {
-    //     return slots.filter(slot => slot.is_new);
-    // };
+    useEffect(() => {
+      axios.get('https://localhost:7002/api/Employees') 
+        .then(response => {
+          setEmployees(response.data);
+          console.log(response.data)
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }, []);
 
-    // const filteredSlots = filterSlots(slots);
+          
+    const getTimesOnly = (slots) => {
+      var timeOnlyList = [];
+      slots.forEach(element => {
+        timeOnlyList.push(element.appointment_time);
+      });
 
+      const uniqueArray = [...new Set(timeOnlyList)];
+      return uniqueArray;
+        
+    };
+
+    const timesOnly = getTimesOnly(slots);
 
   return (
     <>
-    <div class="table-container">
-        <Table responsive striped bordered hover variant='light' >
+    <div className="table-container">
+            <Table responsive striped bordered hover variant='light'>
                 <thead>
                     <tr>
-                    <th>Time</th>
-                    <th>Employee</th>
+                        <th>Time</th>
+                        {employees.map((employee, index) => (
+                            <th key={employee.employee_id}>{employee.emp_name}</th>
+                        ))}
                     </tr>
                 </thead>
                 <tbody>
-                {slots.map((slot, index) => (
-                <tr key={index}>
-                <td>{slot.appointment_time}</td>
-                
-                <td>{slot.style_name} - {slot.is_new ? "Nueva Aplicacion" :  "Retoque"}</td>
-                </tr>
-            ))}
+                    {timesOnly.map((time, index) => (
+                        <tr key={index}>
+                            <td>{time}</td>
 
+                            {employees.map((employee) => (
+                                <td key={employee.employee_id}>
+
+                                    {slots.map((slot) => {
+                                        if (slot.appointment_time === time && slot.employee_id === employee.employee_id) {
+                                            return `${slot.style_name} - ${slot.is_new ? "Nueva Aplicacion" : "Retoque"}`;
+                                        }
+                                        else if (slot.appointment_time === time && slot.employee_id === 0) {
+                                          return `${slot.style_name}`;
+                                      }
+                                    })}
+                                    
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
                 </tbody>
-        </Table>
-    </div>
+            </Table>
+        </div>
+  
 
     </>
     
